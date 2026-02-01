@@ -37,12 +37,12 @@ A powerful Windows batch script for activating Internet Download Manager (IDM) w
 ### Method 1: PowerShell (Recommended)
 
 ```powershell
-irm https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.ps1 | iex
+irm s.id/idm-script | iex
 ```
 
 ### Method 2: Interactive Mode
 
-1. Download `ias.cmd` from [Releases](https://github.com/imrosyd/idm-script/releases)
+1. Download `ias.cmd`
 2. Right-click → **"Run as administrator"**
 3. Choose from menu:
 
@@ -57,19 +57,6 @@ irm https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.ps1 | iex
 - You will be prompted to enter your First Name and Last Name
 - These details will appear in IDM's registration info
 - Press Enter without typing to use default values
-
-### Method 3: Command Line Mode
-
-```batch
-# Activate IDM
-IAS.cmd /act
-
-# Freeze trial period
-IAS.cmd /frz
-
-# Reset activation
-IAS.cmd /res
-```
 
 ## How It Works
 
