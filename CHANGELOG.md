@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-02-01
+
+### Added
+- **Smart Auto-Update Feature** [8]: Improved update system that automatically downloads, installs, and restarts the script.
+- **Enhanced Freeze Trial** [2]: Further optimized specifically for IDM stability (Highly Recommended).
+- **Streamlined Menu**: Removed deprecated "Generate License" feature for simplicity.
+- **Improved Serial Key Handling**: Activation now uses consistent internal logic for serial generation.
+
+### Changed
+- Reordered menu items for better usability:
+  - Activation: Activate, Freeze, Reset
+  - Tools: Install/Update, Backup, Restore
+  - Other: Clean Uninstall, Check Update, Help
+- Removed "Generate New License" menu [4] to avoid confusion with main activation.
+- `_check_update` function now handles the entire update process automatically.
+
+### Fixed
+- Fixed crash issues in "Check Status" menu on certain systems.
+- Fixed "Clean Uninstall" to properly remove all scheduled tasks.
+- Resolved path issues by using environment variables (`%ProgramFiles%`, etc.) instead of hardcoded paths.
+- Removed unreliable ASCII art elements that caused display glitches in some locales.
+
+---
+
+## [3.1.0] - 2026-02-01
+
+### Added
+- **Custom Name Registration**: Enter your own First Name and Last Name during activation
+- **ASCII Art Banner**: Modern visual branding with "IDM SCRIPT" logo
+- **Check IDM Status** [4]: View IDM version, registration info, and activation status
+- **Backup Settings** [6]: Export IDM settings to Documents folder
+- **Restore Settings** [7]: Import previously backed up settings
+- **Check Script Update** [9]: Compare local version with GitHub latest
+- **Clean Uninstall** [8]: Complete IDM removal including registry cleanup
+- **Auto-Fix Features**: Automatic fixes for PowerShell, WMI, and connection issues
+- **Retry Mechanism**: 3 retries with DNS flush for connection problems
+
+### Changed
+- Redesigned menu with categorized sections (Activation, Tools, Other)
+- Modern box-style layout with Unicode characters and emoji icons
+- Files renamed to lowercase (`ias.cmd`, `ias.ps1`, `contributing.md`, `project_summary.md`)
+- Enhanced color scheme with green/yellow highlights
+- Repository moved to imrosyd/idm-script
+
+### Improved
+- PowerShell auto-fix: Sets execution policy to Bypass automatically
+- WMI auto-fix: Restarts winmgmt service if needed
+- Better error messages with manual fix instructions
+
+---
+
 ## [3.0.0] - 2025-12-04
 
 ### Added
@@ -75,4 +126,6 @@ The script combines the best practices and features from multiple activation app
 
 ---
 
-[3.0.0]: https://github.com/omartazul/IDM-Activation-Script/releases/tag/v3.0.0
+[3.2.0]: https://github.com/imrosyd/idm-script/releases/tag/v3.2.0
+[3.1.0]: https://github.com/imrosyd/idm-script/releases/tag/v3.1.0
+[3.0.0]: https://github.com/imrosyd/idm-script/releases/tag/v3.0.0

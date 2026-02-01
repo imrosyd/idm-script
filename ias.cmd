@@ -1,4 +1,4 @@
-@set iasver=3.0
+@set iasver=3.2.0
 @setlocal DisableDelayedExpansion
 @echo off
 
@@ -62,7 +62,7 @@ exit /b
 ::========================================================================================================================================
 
 set "blank="
-set "repo=https://github.com/omartazul/IDM-Activation-Script"
+set "repo=https://github.com/imrosyd/idm-script"
 
 ::  Check if Null service is working, it's important for the batch script
 
@@ -208,12 +208,9 @@ REM :PowerShellTest: $ExecutionContext.SessionState.LanguageMode :PowerShellTest
 
 %psc% "$f=[io.file]::ReadAllText('!_batp!') -split ':PowerShellTest:\s*';iex ($f[1])" | find /i "FullLanguage" %nul1% || (
 %eline%
-%psc% $ExecutionContext.SessionState.LanguageMode
+echo PowerShell is not working. Please run:
+echo Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force
 echo:
-echo PowerShell is not working. Aborting...
-echo If you have applied restrictions on Powershell then undo those changes.
-echo:
-echo For help, visit: %repo%
 goto done2
 )
 
@@ -274,11 +271,10 @@ echo Initializing...
 
 %psc% "Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property CreationClassName" %nul2% | find /i "computersystem" %nul1% || (
 %eline%
-%psc% "Get-WmiObject -Class Win32_ComputerSystem | Select-Object -Property CreationClassName"
+echo WMI is not working. Please run:
+echo   net stop winmgmt /y
+echo   net start winmgmt
 echo:
-echo WMI is not working. Aborting...
-echo:
-echo For help, visit: %repo%
 goto done2
 )
 
@@ -365,40 +361,319 @@ if %_freeze%==1 (set frz=1&goto :_activate)
 
 cls
 title  IDM Activation Script %iasver%
-if not defined terminal mode 75, 28
+if not defined terminal mode 76, 28
 
 echo:
 echo:
-call :_color2 %_White% "             " %_Green% "IDM Activation Script v%iasver%"
-echo:            ___________________________________________________ 
+echo   ===============================================
+call :_color %_Green% "       I D M   A C T I V A T I O N   S C R I P T"
+echo   ===============================================
 echo:
-echo:               GitHub: github.com/omartazul
-echo:               Author: Tazul Islam
-echo:            ___________________________________________________ 
-echo:                                                               
-echo:               [1] Activate IDM
-echo:               [2] Freeze Trial Period
-echo:               [3] Reset Activation / Trial
-echo:               _____________________________________________   
-echo:                                                               
-echo:               [4] Download IDM
-echo:               [5] Help
-echo:               [0] Exit
-echo:            ___________________________________________________
-echo:         
-call :_color2 %_White% "             " %_Green% "Enter a menu option in the Keyboard [1,2,3,4,5,0]"
-choice /C:123450 /N
+echo   Version: %iasver%  -  github.com/imrosyd/idm-script
+echo:
+echo   ============================================================
+echo:
+echo   --- ACTIVATION -----------------------------------------
+echo       [1] Activate IDM
+echo       [2] Freeze Trial Period
+echo       [3] Reset Activation / Trial
+echo:
+echo   --- TOOLS ----------------------------------------------
+echo       [4] Install / Update IDM
+echo       [5] Backup Settings
+echo       [6] Restore Settings
+echo:
+echo   --- OTHER ----------------------------------------------
+echo       [7] Clean Uninstall IDM
+echo       [8] Check Script Update
+echo       [H] Help / Documentation
+echo       [0] Exit
+echo:
+echo   ============================================================
+echo:
+echo   Enter your choice: 
+choice /C:12345678H0 /N
 set _erl=%errorlevel%
 
-if %_erl%==6 exit /b
-if %_erl%==5 start %repo% & goto MainMenu
-if %_erl%==4 start https://www.internetdownloadmanager.com/download.html & goto MainMenu
+if %_erl%==10 exit /b
+if %_erl%==9 start https://github.com/imrosyd/idm-script & goto MainMenu
+if %_erl%==8 goto :_check_update
+if %_erl%==7 goto :_clean_uninstall
+if %_erl%==6 goto :_restore_settings
+if %_erl%==5 goto :_backup_settings
+if %_erl%==4 goto :_install_idm
 if %_erl%==3 goto _reset
 if %_erl%==2 (set frz=1&goto :_activate)
 if %_erl%==1 (set frz=0&goto :_activate)
 goto :MainMenu
 
 ::========================================================================================================================================
+
+:_install_idm
+
+cls
+echo:
+echo   ============================================================
+echo                      INSTALL / UPDATE IDM
+echo   ============================================================
+echo:
+echo   Downloading IDM installer from official website...
+echo:
+
+set "idm_installer=%SystemRoot%\Temp\idman_setup.exe"
+
+:: Download IDM installer using PowerShell
+powershell -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://mirror2.internetdownloadmanager.com/idman642build25.exe' -OutFile '%idm_installer%' -UseBasicParsing; Write-Host 'Download successful' } catch { Write-Host 'Download failed' }"
+
+if not exist "%idm_installer%" (
+echo:
+echo   ERROR: Failed to download IDM installer.
+echo:
+echo   Please download manually from:
+echo   https://www.internetdownloadmanager.com/download.html
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+)
+
+echo:
+echo   Download completed successfully!
+echo:
+echo   Starting IDM installer...
+echo:
+echo   ============================================================
+echo:
+echo   Please follow the installation wizard.
+echo   After installation, return here to activate IDM.
+echo:
+echo   ============================================================
+
+:: Run the installer
+start "" /wait "%idm_installer%"
+
+:: Cleanup
+if exist "%idm_installer%" del /f /q "%idm_installer%"
+
+echo:
+echo   Installation completed!
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+
+::========================================================================================================================================
+
+:_backup_settings
+
+cls
+echo:
+echo   ============================================================
+echo                     BACKUP IDM SETTINGS
+echo   ============================================================
+echo:
+
+set "backup_dir=%userprofile%\Documents\IDM_Backup"
+set "backup_file=%backup_dir%\idm_settings_%date:~-4%%date:~3,2%%date:~0,2%.reg"
+
+if not exist "%backup_dir%" mkdir "%backup_dir%"
+
+echo   Creating backup of IDM settings...
+echo:
+
+reg export "HKCU\Software\DownloadManager" "%backup_file%" /y %nul2%
+
+if exist "%backup_file%" (
+echo   Backup created successfully!
+echo:
+echo   Backup saved to:
+echo   %backup_file%
+) else (
+echo   Failed to create backup.
+)
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+
+::========================================================================================================================================
+
+:_restore_settings
+
+cls
+echo:
+echo   ============================================================
+echo                    RESTORE IDM SETTINGS
+echo   ============================================================
+echo:
+
+set "backup_dir=%userprofile%\Documents\IDM_Backup"
+
+if not exist "%backup_dir%\*.reg" (
+echo   No backup files found in %backup_dir%
+echo:
+echo   Please create a backup first using option [6].
+goto done
+)
+
+echo   Available backup files:
+echo:
+set /a count=0
+for %%f in ("%backup_dir%\*.reg") do (
+set /a count+=1
+echo      [!count!] %%~nxf
+)
+echo:
+set /p "restore_choice=   Enter backup number to restore (or 0 to cancel): "
+
+if "%restore_choice%"=="0" goto MainMenu
+
+set /a idx=0
+for %%f in ("%backup_dir%\*.reg") do (
+set /a idx+=1
+if "!idx!"=="%restore_choice%" (
+echo:
+echo   Restoring: %%~nxf
+reg import "%%f" %nul2%
+if !errorlevel!==0 (
+echo   Settings restored successfully!
+) else (
+echo   Failed to restore settings.
+)
+)
+)
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+
+::========================================================================================================================================
+
+:_check_update
+
+cls
+echo:
+echo   ============================================================
+echo                   CHECK FOR SCRIPT UPDATES
+echo   ============================================================
+echo:
+echo   Current Version: v%iasver%
+echo:
+echo   Checking GitHub for latest version...
+echo:
+
+:: Check latest version from GitHub
+for /f "delims=" %%a in ('powershell -Command "try { $r = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.cmd' -UseBasicParsing; $m = [regex]::Match($r.Content, '@set iasver=([0-9.]+)'); if($m.Success){$m.Groups[1].Value}else{'error'} } catch { 'error' }"') do set "latest_ver=%%a"
+
+if "%latest_ver%"=="error" (
+echo   Unable to check for updates. Check your internet connection.
+goto :update_done
+)
+
+if "%latest_ver%"=="%iasver%" (
+echo   You are using the latest version!
+goto :update_done
+)
+
+echo   New version available: v%latest_ver%
+echo:
+choice /C:YN /M "   Do you want to update now? "
+if !errorlevel!==2 goto :update_done
+
+echo:
+echo   Downloading update...
+set "update_file=%temp%\ias_update.cmd"
+powershell -Command "try { Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.cmd' -OutFile '%update_file%' -UseBasicParsing } catch { exit 1 }"
+
+if not exist "%update_file%" (
+echo:
+echo   [!] Download failed. Please try again later.
+goto :update_done
+)
+
+echo:
+echo   [OK] Download successful!
+echo   [..] Installing update...
+echo:
+
+:: Create updater script
+set "updater=%temp%\updater.cmd"
+(
+echo @echo off
+echo timeout /t 2 /nobreak ^>nul
+echo move /y "%update_file%" "%~f0" ^>nul
+echo start "" "%~f0"
+echo del "%%~f0"
+) > "%updater%"
+
+:: Run updater and exit
+start "" "%updater%"
+exit
+
+:update_done
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+
+::========================================================================================================================================
+
+:_clean_uninstall
+
+cls
+echo:
+echo   ============================================================
+echo                     CLEAN UNINSTALL IDM
+echo   ============================================================
+echo:
+echo   WARNING: This will completely remove IDM and all settings!
+echo:
+echo   This action will:
+echo      - Uninstall IDM program
+echo      - Remove all registry entries
+echo      - Delete IDM data folders
+echo:
+choice /C:YN /N /M "   Are you sure you want to continue? [Y/N]: "
+if !errorlevel!==2 goto MainMenu
+
+echo:
+echo   Closing IDM...
+%idmcheck% && taskkill /f /im idman.exe %nul2%
+
+echo   Uninstalling IDM...
+if exist "%ProgramFiles(x86)%\Internet Download Manager\Uninstall.exe" (
+start "" /wait "%ProgramFiles(x86)%\Internet Download Manager\Uninstall.exe" /S
+) else if exist "%ProgramFiles%\Internet Download Manager\Uninstall.exe" (
+start "" /wait "%ProgramFiles%\Internet Download Manager\Uninstall.exe" /S
+)
+
+echo   Cleaning registry...
+reg delete "HKCU\Software\DownloadManager" /f %nul2%
+reg delete "HKLM\SOFTWARE\Internet Download Manager" /f %nul2%
+reg delete "HKLM\SOFTWARE\Wow6432Node\Internet Download Manager" /f %nul2%
+reg delete "%CLSID%" /f %nul2%
+
+echo   Removing data folders...
+if exist "%appdata%\IDM" rd /s /q "%appdata%\IDM" %nul2%
+
+echo:
+echo   IDM has been completely removed from your system.
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
 
 :_reset
 
@@ -511,6 +786,24 @@ echo:
 choice /C:19 /N /M ">    [1] Go Back   [9] Continue with Activation : "
 if !errorlevel!==1 goto :MainMenu
 cls
+echo:
+echo %line%
+echo:
+call :_color %_Green% "Enter Registration Details:"
+echo:
+set /p "user_fname=First Name: "
+set /p "user_lname=Last Name: "
+set /p "user_email=Email: "
+if "!user_fname!"=="" set "user_fname=User"
+if "!user_lname!"=="" set "user_lname=IDM"
+if "!user_email!"=="" set "user_email=!user_fname!.!user_lname!@gmail.com"
+echo:
+echo %line%
+echo:
+echo      Registering to: !user_fname! !user_lname!
+echo      Email: !user_email!
+echo:
+echo %line%
 )
 
 echo:
@@ -523,14 +816,38 @@ goto done
 :: Internet check with internetdownloadmanager.com ping and port 80 test
 
 set _int=
+set _retry=0
+
+:internet_check
+set /a _retry+=1
 for /f "delims=[] tokens=2" %%# in ('ping -n 1 internetdownloadmanager.com') do (if not [%%#]==[] set _int=1)
 
 if not defined _int (
-%psc% "$t = New-Object Net.Sockets.TcpClient;try{$t.Connect("""internetdownloadmanager.com""", 80)}catch{};$t.Connected" | findstr /i "true" %nul1% || (
-call :_color %Red% "Unable to connect to internetdownloadmanager.com. Aborting..."
+%psc% "$t = New-Object Net.Sockets.TcpClient;try{$t.Connect("""internetdownloadmanager.com""", 80)}catch{};$t.Connected" | findstr /i "true" %nul1% && set _int=1
+)
+
+if not defined _int (
+if %_retry% LSS 3 (
+echo:
+echo Connection attempt %_retry% failed. Retrying...
+:: Flush DNS cache and retry
+ipconfig /flushdns %nul2%
+timeout /t 2 %nul1%
+goto :internet_check
+)
+echo:
+call :_color %Red% "Unable to connect to internetdownloadmanager.com after 3 attempts."
+echo:
+echo Please check:
+echo   - Your internet connection
+echo   - Firewall/antivirus settings
+echo   - Try: ipconfig /flushdns
+echo:
 goto done
 )
-call :_color %Gray% "Ping command failed for internetdownloadmanager.com"
+
+if %_retry% GTR 1 (
+echo Connection established after %_retry% attempts.
 echo:
 )
 
@@ -628,11 +945,17 @@ echo:
 echo Applying registration details...
 echo:
 
-set /a fname = %random% %% 9999 + 1000
-set /a lname = %random% %% 9999 + 1000
-set email=%fname%.%lname%@gmail.com
+if not defined user_fname set "user_fname=User"
+if not defined user_lname set "user_lname=IDM"
+if not defined user_email set "user_email=!user_fname!.!user_lname!@gmail.com"
+set "fname=!user_fname!"
+set "lname=!user_lname!"
+set "email=!user_email!"
 
 for /f "delims=" %%a in ('%psc% "$key = -join ((Get-Random -Count 20 -InputObject ([char[]]('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'))));$key = ($key.Substring(0, 5) + '-' + $key.Substring(5, 5) + '-' + $key.Substring(10, 5) + '-' + $key.Substring(15, 5) + $key.Substring(20));Write-Output $key" %nul6%') do (set key=%%a)
+
+echo Registering to: %fname% %lname%
+echo:
 
 set "reg=HKCU\SOFTWARE\DownloadManager /v FName /t REG_SZ /d "%fname%"" & call :_rcont
 set "reg=HKCU\SOFTWARE\DownloadManager /v LName /t REG_SZ /d "%lname%"" & call :_rcont
@@ -912,3 +1235,4 @@ exit /b
 
 ::========================================================================================================================================
 :: Leave empty line below
+

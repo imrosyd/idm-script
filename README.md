@@ -1,20 +1,29 @@
-# IDM Activation Script
+# IDM Activation Script v3.2.0
 
-A powerful Windows batch script for activating Internet Download Manager (IDM) with multiple activation methods.
+A powerful Windows batch script for activating Internet Download Manager (IDM) with modern UI, custom name registration, and comprehensive tools.
 
 ## Features
 
-- **Multiple Activation Methods**
-  - Full IDM Activation
-  - Trial Period Freeze
+- **Modern Visual Interface**
+  - ASCII Art Banner with "IDM SCRIPT" logo
+  - Categorized menu layout (Activation, Tools, Other)
+  - Emoji icons and Unicode box styling
+
+- **Activation Options**
+  - Custom Name Registration (enter your own name)
+  - Trial Period Freeze (Recommended)
   - Reset Activation/Trial
 
-- **Advanced Capabilities**
-  - Automatic registry backup before modifications
-  - Smart CLSID registry key detection and management
-  - Support for x86, x64, and ARM64 architectures
-  - Unattended mode support via command-line parameters
-  - Compatibility with Windows 7/8/8.1/10/11 and Server editions
+- **Tools**
+  - Install/Update IDM directly
+  - Backup & Restore Settings
+  - Smart Auto-Update Feature (Automatically updates script)
+  - Clean Uninstall (complete removal)
+
+- **Auto-Fix Features**
+  - PowerShell execution policy auto-fix
+  - WMI service auto-restart
+  - Connection retry with DNS flush
 
 ## Requirements
 
@@ -27,28 +36,27 @@ A powerful Windows batch script for activating Internet Download Manager (IDM) w
 
 ### Method 1: PowerShell (Recommended)
 
-Download and run directly from GitHub:
-
 ```powershell
-irm https://raw.githubusercontent.com/omartazul/IDM-Activation-Script/main/IAS.ps1 | iex
+irm https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.ps1 | iex
 ```
-
-This method:
-- Downloads the latest version automatically
-- Runs in a single command
-- No manual file management needed
 
 ### Method 2: Interactive Mode
 
-1. Download `IAS.cmd` from [Releases](https://github.com/omartazul/IDM-Activation-Script/releases)
-2. Right-click on `IAS.cmd` and select **"Run as administrator"**
-3. Choose from the menu:
-   - `[1]` Activate IDM
-   - `[2]` Freeze Trial Period (Recommended)
-   - `[3]` Reset Activation/Trial
-   - `[4]` Download IDM
-   - `[5]` Help
-   - `[0]` Exit
+1. Download `ias.cmd` from [Releases](https://github.com/imrosyd/idm-script/releases)
+2. Right-click → **"Run as administrator"**
+3. Choose from menu:
+
+| Activation | Tools | Other |
+|------------|-------|-------|
+| [1] Activate IDM | [4] Install/Update | [7] Clean Uninstall |
+| [2] Freeze Trial ⭐ | [5] Backup | [8] Check Update |
+| [3] Reset | [6] Restore | [H] Help |
+|  |  | [0] Exit |
+
+**When selecting Activate IDM:**
+- You will be prompted to enter your First Name and Last Name
+- These details will appear in IDM's registration info
+- Press Enter without typing to use default values
 
 ### Method 3: Command Line Mode
 
@@ -79,22 +87,33 @@ IAS.cmd /res
 
 ## Troubleshooting
 
-### Common Issues
+### Auto-Fix Features
 
-**Script requires admin privileges**
-- Right-click and select "Run as administrator"
+The script includes automatic fixes for common issues:
+
+| Issue | Auto-Fix |
+|-------|----------|
+| PowerShell restricted | Automatically sets execution policy to Bypass |
+| WMI not working | Automatically restarts winmgmt service |
+| Internet connection | Retries 3 times with DNS cache flush |
+
+### Manual Fixes (if auto-fix fails)
 
 **PowerShell is not working**
-- Check if PowerShell execution policies are restricted
-- Run: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass`
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force
+```
 
 **WMI is not working**
-- Restart Windows Management Instrumentation service
-- Run: `net start winmgmt`
+```cmd
+net stop winmgmt /y
+net start winmgmt
+```
 
 **Cannot connect to internetdownloadmanager.com**
 - Check your internet connection
 - Verify firewall/antivirus settings
+- Run: `ipconfig /flushdns`
 
 ## Security
 
@@ -125,6 +144,19 @@ Official IDM Download: [internetdownloadmanager.com](https://www.internetdownloa
 
 ## Version History
 
+### v3.2.0 (2026-02-01)
+- **NEW**: Smart Auto-Update Feature
+- **NEW**: Streamlined Menu Layout
+- Removing deprecated Generate License feature
+- Enhanced Freeze Trial stability
+
+### v3.1.0 (2026-02-01)
+- **NEW**: Custom name registration feature
+- **NEW**: ASCII Art Banner & Modern UI
+- **NEW**: Backup & Restore Settings
+- Repository moved to imrosyd/idm-script
+- Updated documentation
+
 ### v3.0 (2025-12-04)
 - Initial release
 - Full activation support
@@ -142,8 +174,9 @@ This script is for educational purposes only. Users should purchase a legitimate
 
 ## Author
 
-**Tazul Islam**
-- GitHub: [@omartazul](https://github.com/omartazul)
+**imrosyd**
+- GitHub: [@imrosyd](https://github.com/imrosyd)
+- Forked from: [omartazul/IDM-Activation-Script](https://github.com/omartazul/IDM-Activation-Script)
 
 ## Contributing
 
@@ -152,7 +185,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Support
 
 For issues and questions:
-- Open an issue on [GitHub](https://github.com/omartazul/IDM-Activation-Script/issues)
+- Open an issue on [GitHub](https://github.com/imrosyd/idm-script/issues)
 - Check existing issues for solutions
 
 ---

@@ -1,45 +1,49 @@
 # IDM Activation Script - Project Summary
 
-## 🎉 Welcome to IDM Activation Script v3.0
+## 🎉 Welcome to IDM Activation Script v3.2.0
 
-A professional, fully-featured Windows batch script for Internet Download Manager activation with comprehensive documentation and clean architecture.
+A professional Windows batch script for IDM activation with modern UI, custom name registration, and comprehensive tools.
 
 ## 📁 Current Project Structure
 
 ```
-IDM-Activation-Script/
-├── IAS.cmd                  # Main activation script (916 lines)
-├── IAS.ps1                  # PowerShell download wrapper
+idm-script/
+├── ias.cmd                  # Main activation script (1200+ lines)
+├── ias.ps1                  # PowerShell download wrapper
 ├── README.md                # Complete project documentation
-├── LICENSE                  # MIT License (2025)
-├── CHANGELOG.md             # Version history (v3.0.0)
-├── CONTRIBUTING.md          # Contribution guidelines
-└── PROJECT_SUMMARY.md       # This overview document
+├── LICENSE                  # MIT License
+├── CHANGELOG.md             # Version history
+├── contributing.md          # Contribution guidelines
+└── project_summary.md       # This overview document
 ```
 
-**Repository:** https://github.com/omartazul/IDM-Activation-Script  
-**Author:** Tazul Islam ([@omartazul](https://github.com/omartazul))  
+**Repository:** https://github.com/imrosyd/idm-script  
+**Author:** imrosyd ([@imrosyd](https://github.com/imrosyd))  
 **License:** MIT  
-**Version:** 3.0.0
+**Version:** 3.2.0
 
 ## ✨ Core Features
 
-### IAS.cmd - Main Script
-- **916 lines** of professional batch code
-- **Interactive menu** with color-coded interface
-- **Three activation modes:**
-  1. Full IDM Activation
-  2. Trial Period Freeze (Recommended)
-  3. Reset Activation/Trial
-- **Automatic registry backups** before modifications
-- **Smart CLSID detection** and management
-- **Multi-architecture support:** x86, x64, ARM64
-- **Command-line parameters:** `/act`, `/frz`, `/res`
-- **Comprehensive error handling** and validation
+### ias.cmd - Main Script
+- **1200+ lines** of professional batch code
+- **ASCII Art Banner** with "IDM SCRIPT" logo
+- **Modern box-styled menu** with Unicode characters & emojis
+- **Streamlined Menu Options:**
+  - [1] Activate IDM (with custom name)
+  - [2] Freeze Trial Period (Recommended)
+  - [3] Reset Activation/Trial
+  - [4] Install/Update IDM
+  - [5] Backup Settings
+  - [6] Restore Settings
+  - [7] Clean Uninstall
+  - [8] Check Script Update (Auto-Update)
+  - [H] Help / [0] Exit
+- **Auto-Fix Features:** PowerShell, WMI, Connection retry
+- **Multi-architecture:** x86, x64, ARM64
 - **Windows compatibility:** 7/8/8.1/10/11 + Server
 
-### IAS.ps1 - Download Wrapper
-- Downloads latest IAS.cmd from GitHub
+### ias.ps1 - Download Wrapper
+- Downloads latest ias.cmd from GitHub
 - Hash verification support
 - Fallback URL support
 - Safe temp file handling
@@ -50,12 +54,12 @@ IDM-Activation-Script/
 ### Script Capabilities
 ```batch
 # Activation modes
-IAS.cmd /act    # Full activation
-IAS.cmd /frz    # Freeze trial (recommended)
-IAS.cmd /res    # Reset to defaults
+ias.cmd /act    # Full activation
+ias.cmd /frz    # Freeze trial (recommended)
+ias.cmd /res    # Reset to defaults
 
 # Interactive menu
-IAS.cmd         # Run with full menu interface
+ias.cmd         # Run with full menu interface
 ```
 
 ### Architecture Support
@@ -75,8 +79,8 @@ IAS.cmd         # Run with full menu interface
 
 | Metric | Value |
 |--------|-------|
-| **Total Files** | 8 |
-| **Code Lines (IAS.cmd)** | 916 |
+| **Total Files** | 7 |
+| **Code Lines (ias.cmd)** | 950+ |
 | **Documentation Files** | 4 |
 | **Supported Windows Versions** | 6 (7/8/8.1/10/11/Server) |
 | **Supported Architectures** | 3 (x86/x64/ARM64) |
@@ -93,13 +97,13 @@ IAS.cmd         # Run with full menu interface
 - ✅ **License:** MIT (open source)
 
 ### Repository URL
-**https://github.com/omartazul/IDM-Activation-Script**
+**https://github.com/imrosyd/idm-script**
 
 ## 📝 File Descriptions
 
-### IAS.cmd (Main Script)
+### ias.cmd (Main Script)
 The core batch script that handles all IDM activation functionality:
-- Menu system with color output
+- Modern box-styled menu with Unicode
 - Registry scanning and manipulation
 - CLSID key management
 - Trial period freezing
@@ -107,9 +111,9 @@ The core batch script that handles all IDM activation functionality:
 - Download testing
 - Error handling and recovery
 
-### IAS.ps1 (PowerShell Wrapper)
+### ias.ps1 (PowerShell Wrapper)
 Download and execute helper script:
-- Fetches latest IAS.cmd from GitHub
+- Fetches latest ias.cmd from GitHub
 - Verifies file integrity (optional hash check)
 - Handles temporary file management
 - Supports command-line arguments
@@ -132,7 +136,7 @@ Version history and release notes:
 - Known limitations
 - Recommendations
 
-### CONTRIBUTING.md
+### contributing.md
 Community contribution guide:
 - Code of conduct
 - Bug reporting template
@@ -164,7 +168,7 @@ MIT License terms:
 ## 💡 Recommended Workflow
 
 ### For End Users
-1. Download `IAS.cmd` from releases
+1. Download `ias.cmd` from releases
 2. Right-click → "Run as administrator"
 3. Select option [2] Freeze Trial (recommended)
 4. Enjoy IDM without limitations
@@ -172,10 +176,10 @@ MIT License terms:
 ### For Advanced Users
 ```powershell
 # Download and run with PowerShell
-irm https://raw.githubusercontent.com/omartazul/IDM-Activation-Script/main/IAS.ps1 | iex
+irm https://raw.githubusercontent.com/imrosyd/idm-script/main/ias.ps1 | iex
 
 # Or with parameters
-.\IAS.cmd /frz
+.\ias.cmd /frz
 ```
 
 ## 🔒 Security & Privacy
@@ -206,11 +210,11 @@ irm https://raw.githubusercontent.com/omartazul/IDM-Activation-Script/main/IAS.p
 
 ### Community Requests
 Issues and feature requests are welcome at:
-**https://github.com/omartazul/IDM-Activation-Script/issues**
+**https://github.com/imrosyd/idm-script/issues**
 
 ## 🤝 Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+Contributions are welcome! See [contributing.md](contributing.md) for:
 - How to report bugs
 - How to suggest features
 - Development setup
@@ -220,7 +224,7 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 ## 📞 Support
 
 ### Getting Help
-- **Issues:** https://github.com/omartazul/IDM-Activation-Script/issues
+- **Issues:** https://github.com/imrosyd/idm-script/issues
 - **Documentation:** [README.md](README.md)
 
 ### Common Issues
@@ -259,10 +263,10 @@ If you find this project useful, please consider:
 - 🤝 Contributing code improvements
 - 📢 Sharing with others
 
-**Repository:** https://github.com/omartazul/IDM-Activation-Script
+**Repository:** https://github.com/imrosyd/idm-script
 
 ---
 
-**Last Updated:** December 29, 2025  
-**Version:** 3.0.0  
+**Last Updated:** February 01, 2026  
+**Version:** 3.1.0  
 **Status:** Active Development
