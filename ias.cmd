@@ -417,6 +417,10 @@ echo   ============================================================
 echo                      INSTALL / UPDATE IDM
 echo   ============================================================
 echo:
+echo   Terminating IDM process...
+taskkill /f /im idman.exe >nul 2>&1
+
+echo:
 echo   Downloading IDM installer from official website...
 echo:
 
@@ -447,7 +451,7 @@ echo:
 echo   ============================================================
 echo:
 echo   Please follow the installation wizard.
-echo   After installation, return here to activate IDM.
+echo   Wait until installation is finished.
 echo:
 echo   ============================================================
 
@@ -459,6 +463,48 @@ if exist "%idm_installer%" del /f /q "%idm_installer%"
 
 echo:
 echo   Installation completed!
+echo   Checking activation status...
+
+:: Check if IDM is already registered
+reg query "HKCU\Software\DownloadManager" /v Serial >nul 2>&1
+if %errorlevel%==0 (
+echo:
+echo   [OK] IDM is already registered.
+echo:
+echo   ============================================================
+echo:
+echo   Press any key to return to menu...
+pause >nul
+goto MainMenu
+)
+
+echo:
+echo   [!] IDM is NOT registered.
+echo   Auto-activating now...
+echo:
+
+:: Prompt for registration details
+echo:
+echo   Enter registration details:
+echo:
+set /p "user_fname=   First Name: "
+set /p "user_lname=   Last Name: "
+
+if "!user_fname!"=="" set "user_fname=TRIAL"
+if "!user_lname!"=="" set "user_lname=USER"
+if "!user_email!"=="" set "user_email=!user_fname!.!user_lname!@gmail.com"
+
+echo:
+echo   Activating IDM...
+echo:
+
+:: Call activation function
+set "frz=0"
+set "_unattended=1"
+call :_activate
+
+echo:
+echo   [OK] Auto-activation completed!
 echo:
 echo   ============================================================
 echo:
@@ -793,7 +839,6 @@ call :_color %_Green% "Enter Registration Details:"
 echo:
 set /p "user_fname=First Name: "
 set /p "user_lname=Last Name: "
-set /p "user_email=Email: "
 if "!user_fname!"=="" set "user_fname=User"
 if "!user_lname!"=="" set "user_lname=IDM"
 if "!user_email!"=="" set "user_email=!user_fname!.!user_lname!@gmail.com"
@@ -801,7 +846,6 @@ echo:
 echo %line%
 echo:
 echo      Registering to: !user_fname! !user_lname!
-echo      Email: !user_email!
 echo:
 echo %line%
 )
